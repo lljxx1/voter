@@ -1,0 +1,2195 @@
+
+
+
+
+
+
+<html>
+        <head>
+    
+    
+            <title>EOS Voting Data and Statistics</title>
+            <meta http-equiv="content-type" content="text/html;charset=utf-8">
+            <meta name="viewport" content="width=device-width,initial-scale=1">
+            <meta name="description" content="Knowing who votes for who, tracking the vote data">
+            <meta name="author" content="fun">
+            <meta property="og:image" content="https://eosmedi.com/wp-content/uploads/2018/05/QQ%E5%9B%BE%E7%89%8720180517220830-e1526574262156.png"/>
+            <link rel="shortcut icon" href="https://eosmedi.com/wp-content/uploads/2018/05/QQ%E5%9B%BE%E7%89%8720180517220830-e1526574262156.png"/>
+            <script src="https://cdn.bootcss.com/es6-promise/4.1.1/es6-promise.auto.min.js"></script>
+            <script src="https://cdn.jsdelivr.net/npm/vue@2.5.16/dist/vue.min.js"></script>
+            <script src="https://cdn.jsdelivr.net/npm/vue-router@3.0.1/dist/vue-router.min.js"></script>
+            <script src="https://cdn.bootcss.com/axios/0.18.0/axios.min.js"></script>
+            <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.1.0/css/all.css" integrity="" crossorigin="anonymous">
+            <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.1.1/dist/css/bootstrap.min.css" integrity="" crossorigin="anonymous">
+            <!-- <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js" integrity="sha384-smHYKdLADwkXOn1EmN1qk/HfnUcbVRZyYmZ4qpPea6sjB/pTJ0euyQp0Mk8ck+5T"
+                crossorigin="anonymous"></script> -->
+            <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/element-ui@2.4.3/lib/theme-chalk/index.css">
+            <script src="https://cdn.jsdelivr.net/npm/element-ui@2.4.3/lib/index.js"></script>
+            <script src="https://cdn.bootcss.com/moment.js/2.22.1/moment-with-locales.min.js"></script>
+            <script src="https://cdn.jsdelivr.net/npm/echarts/dist/echarts.min.js"></script>
+            <script src="https://cdn.jsdelivr.net/npm/eosjs@15.0.6/lib/eos.min.js" integrity="" crossorigin="anonymous"></script>
+        </head>
+        <body>
+            <style>
+                .bd-footer {
+                    font-size: 85%;
+                    background-color: #f7f7f7;
+                    margin-top: 2rem;
+                }
+    
+                .bd-navbar {
+                    background-color: #eee;
+                    border-bottom: 1px solid #dfdfdf
+                }
+    
+                .bd-footer-links li {
+                    display: inline-block;
+                }
+    
+                .bd-footer-links {
+                    padding-left: 0;
+                    margin-bottom: 1rem;
+                }
+    
+                .bd-footer-links li+li {
+                    margin-left: 1rem;
+                }
+    
+                .bd-footer a {
+                    font-weight: 500;
+                    color: #495057;
+                }
+                    
+                .metric {
+                    position: relative;
+                    padding: 1rem;
+                    display: -webkit-box;
+                    display: -ms-flexbox;
+                    display: flex;
+                    -webkit-box-orient: vertical;
+                    -webkit-box-direction: normal;
+                    -ms-flex-direction: column;
+                    flex-direction: column;
+                    -webkit-box-pack: center;
+                    -ms-flex-pack: center;
+                    justify-content: center;
+                    -webkit-box-flex: 1;
+                    -ms-flex-positive: 1;
+                    flex-grow: 1;
+                    max-width: 100%;
+                    border-radius: .25rem;
+                    cursor: default;
+                }
+    
+                .meta-info{
+                    word-wrap: break-word;
+                }
+        
+                .metric-bordered {
+                    border: 1px solid #dfdfdf;
+                }
+        
+                .metric-block {
+                    margin-top: 25px;
+                    margin-bottom: 25px;
+                }
+        
+                #right-meta {
+                    margin-top: 25px;
+                    /* padding-top: 1rem; */
+                }
+        
+                #producerInfo,
+                .meta-info {
+                    margin-bottom: 25px;
+                }
+        
+                #vote-logs p {
+                    /* line-height: 120%; */
+                    font-size: 13px;
+                    padding-bottom: 15px;
+                    border-bottom: 1px solid #ddd
+                }
+        
+                #vote-logs .producer-link {
+                    padding-top: 5px;
+                    margin-right: 10px;
+                    display: inline-block;
+                }
+    
+                #vote-logs .producer-link.router-link-active{
+                    color: red;
+                    text-decoration: underline
+                }
+    
+                .pagination{
+                    margin-top: 20px;
+                }
+        
+                
+                .producer-logo-block{
+                    display: inline-block;
+                    width: 50px;
+                    height: 50px;
+                    overflow: hidden;
+                    vertical-align: middle;
+                    margin-right: 10px;
+                    background: #fefefe;
+                }
+    
+    
+                .producers-list,
+                .producer-list-link{
+                    font-size: 14px;
+                }
+    
+                .el-tag{
+                    margin-right: 10px;
+                    margin-bottom: 5px;
+                }
+    
+                .producer-list-item {
+                    padding-top: 20px;
+                    /* background-color: #f5f7fa; */
+                    border-bottom: 1px solid #ebeef5;
+                }
+    
+                .producer-list-item .el-main{
+                    /* padding-top: 10px; */
+                    font-size: 13px;
+                }
+    
+                .producer-list-item .el-main p{
+                    margin-bottom: 5px;
+                }
+    
+                .producers-list{
+                    border-top: 1px solid #ebeef5;
+                    margin-top: 25px;
+                }
+    
+    
+                .producer-list-item.selected{
+                    background: #f5f7fa;
+                }
+    
+                .metric-block .router-link-exact-active{
+                    color: black
+                }
+    
+                .proxy-list{
+                    margin-top: 20px;
+                }
+                
+    
+                .detail-logo-block{
+                    width: 130px;
+                    height: 130px;
+                    border-radius: 3px;
+                    padding: 4px;
+                    border: 1px solid #f4f4f4;
+                    display: inline-block;
+                    overflow: hidden;
+                }
+    
+                .detail-logo-block{
+                    margin-bottom: 20px;
+                }
+    
+                .detail-slogan{
+                    color: #999;
+                    margin-bottom: 0.5rem;
+                }
+    
+                .detail-info-desc-content strong{
+                    color:black
+                }
+                .detail-info-desc-content{
+                    color: #555
+                }
+    
+                #producerInfo p{
+                    margin-bottom: 5px;
+                    font-weight: bold;
+                    color: black
+                }
+                
+                
+                #producerInfo p .item-value{
+                    color: #555;
+                    font-weight: normal;
+                }
+    
+                #producerInfo p .item-value a{
+                    font-weight: normal;
+                }
+    
+                #producerInfo p .item-value .el-tag{
+                    margin-top: 5px;
+                }
+    
+                .detail-links span{
+                    margin-right: 8px;
+                    color: #007bff
+                }
+    
+                .detail-info-block .el-main{
+                    padding-top: 10px
+                }
+    
+                .voter-actions{
+                    font-size: 14px;
+                    margin-bottom: 50px;
+                }
+    
+                .cancel-action{
+                    color: red
+                }
+    
+                .detal-action{
+                    color: green
+                }
+    
+                .voter-actions li{
+                    line-height: 200%;
+                }
+    
+                .scatter-block .el-button{
+                    height: 56px;
+                }
+    
+                .p-value{
+                    color: #999
+                }
+            </style>
+        
+            <div id="app">
+                <div class="navbar navbar-expand navbar-dark flex-column flex-md-row bd-navbar">
+                                        <a class="navbar-brand mr-0 mr-md-2" href="#/">
+                                        </a>
+                                        <div class="navbar-nav-scroll">
+                                                <ul class="navbar-nav bd-navbar-nav flex-row">
+                                                    <li class="nav-item">
+                                                        <span style="font-size:14px;color:#555;"></span>
+                                                        <h1 class="d-md-flex" class="tool-name" :style="isMobile ? 'font-size:2rem;' : ''">EOS Voter Tracker</h1>
+                                                    </li>
+                                                </ul>
+                                        </div>
+                                        
+                                        <ul class="navbar-nav flex-row ml-md-auto d-md-flex">
+                                            <li class="nav-item">
+                                               <!-- <span class="btn p-2" style="text-decoration: none;">Vote Us: eosmedinodes</span> -->
+                                            </li>
+                                            <li class="nav-item">
+                                            <!-- <a class="p-2 btn btn-link" href="https://t.me/eosmedi" target="_blank" rel="noopener">Join Telegram</a> -->
+                                            </li>
+                                            <li class="nav-item">
+                                            <a class="p-2 btn btn-link" href="https://github.com/eosmedi/EOS-Voter-Tracker" target="_blank" rel="noopener">Github</a>
+                                            </li>
+                                        </ul>
+    
+                                        <div class="navbar-brand mr-0 ml-md-2 mr-md-2 scatter-block">
+                                            <el-dropdown>
+    
+                                                    <button type="button" class="el-button el-button--default">
+                                                        <span class="el-dropdown-link">
+                                                                <span v-if="scatter &amp;&amp; !identity" @click="connectScatter()">Attach an Account</span>
+                                                                <span v-if="scatter &amp;&amp; identity">{{ identity.name }}</span>
+                                                                <span v-if="!scatter"><a href="https://get-scatter.com/" target="_blank">Please install Scatter</a></span>
+                                                        <img src="https://votetracker.eosmedi.com/scatter.png" height="20" style="margin-left:6px">
+                                                        </span>
+                                                        <i class="el-icon-arrow-down el-icon--right"></i>
+                                                    </button>
+                                                    <el-dropdown-menu slot="dropdown">
+                                                      <el-dropdown-item><span v-if="scatter" @click="connectScatter()">Connect Account</span></el-dropdown-item>
+                                                      <el-dropdown-item><span v-if="scatter" @click="signOut()">Sign Out</span></el-dropdown-item>
+                                                    </el-dropdown-menu>
+                                           </el-dropdown>
+                                        </div>
+    
+                        
+                </div>
+        
+                <div class="container-fluid">
+                    <div class="row flex-xl-nowrap justify-content-md-center">
+                        <div class="col-14 col-md-12 col-xl-10 py-md-3 pl-md-3 center-block bd-content">
+                            <div class="row metric-block">
+                                <div class="col-sm">
+                                        <a class="metric metric-bordered align-items-center" href="#">
+                                            <h2 class="metric-label"> Staked </h2>
+                                            <p class="metric-value h3">
+                                                <sub>
+                                                    <i class="oi oi-people"></i>
+                                                </sub>
+                                                <span class="value">
+                                                    <div class="progress" style="
+                                                    width: 100%;
+                                                ">
+                                                            <div class="progress-bar" role="progressbar" :style="'width:'+ status.percent_stacked +'%;'" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">{{ status.percent_stacked }}%</div>
+                                                    </div>
+                                                </span>
+                                            </p>
+                                        </a>
+                                    </div>
+    
+    
+                                <div class="col-sm">
+                                   <router-link class="metric metric-bordered align-items-center" :to="{ name: 'ProducersList'}">
+                                        <h2 class="metric-label"> Producers </h2>
+                                        <p class="metric-value h3">
+                                            <sub>
+                                                <i class="oi oi-people"></i>
+                                            </sub>
+                                            <span class="value">{{ status.producers }}</span>
+                                        </p>
+                                   </router-link>
+                                </div>
+                                
+                                <div class="col-sm">
+                                    <router-link class="metric metric-bordered align-items-center" :to="{ name: 'ProxyList'}">
+                                        <span style="
+        position: absolute;
+        top: 5px;
+        left: 12px;
+    ">new!</span>
+                                        <h2 class="metric-label"> Proxies </h2>
+                                        <p class="metric-value h3">
+                                            <sub>
+                                                <i class="oi oi-people"></i>
+                                            </sub>
+                                            <span class="value">{{ status.proxy_voters }} <span v-if="status.proxy_votes" style="font-size:13px;"> / {{ (status.proxy_votes / 10000).toFixed(0) | numberWithCommas }} EOS</span></span> 
+                                        </p>
+                                    </router-link>
+                                </div>
+    
+                                <div class="col-sm">
+                                    <router-link class="metric metric-bordered align-items-center" :to="{ name: 'VoterList'}">
+    
+                                        <h2 class="metric-label"> Voters </h2>
+                                        <p class="metric-value h3">
+                                            <sub>
+                                                <i class="oi oi-people"></i>
+                                            </sub>
+                                            <span class="value">{{ status.voters }}</span>
+                                        </p>
+                                    </router-link>
+                                </div>
+                            </div>
+    
+    
+    
+                            <router-view :chain-state="chainState" :eos-client="eosClient" :identity="identity" v-if="$route.meta.requireEosClient"></router-view>
+                            <router-view :chain-state="chainState" v-if="!$route.meta.requireEosClient"></router-view>
+                        </div>
+        
+                        <!-- <div class="d-xl-block col-xl-2 py-md-3 pl-md-3 bd-toc" v-if="logFilters.producer">
+                            <div id="right-meta">
+                                <div class="alert alert-info meta-info" role="alert">
+                                    Chain id = aca376f206b8fc25a6ed44dbdc66547c36c6c33e3a119ffbeaef943642f0e906
+                                </div>
+                                <div id="vote-logs">
+                                    <h3>Vote Logs <span v-if="logFilters.producer">for producer: {{ logFilters.producer }}</span>
+                                        <span v-if="logFilters.voter">of : {{ logFilters.voter }}</span> (realtime)
+                                    </h3>
+                                    <p v-for="voteLog in voteLogs" class="vote-log" v-if="filterLog(voteLog)">
+                                        <a>#{{ voteLog.block_num }}</a> 
+                                        {{ voteLog.timeFormatted }}
+                                        &lt; <router-link :to="{ name: 'VoterDetail', params: { voter: voteLog.voter }}">{{ voteLog.voter }}</router-link> &gt; 
+                                        <span v-if="voteLog.voterData">Staked {{ (voteLog.voterData.voter_info.staked / 10000).toFixed(0) }} EOS</span> Vote for<br>
+                                            <router-link :to="{ name: 'ProducerDetail', params: { producer: producer }}" v-for="producer in voteLog.producers" class="producer-link">
+                                                <span v-bind:class="[producer == logFilters.producer ? 'active' : '']">{{ producer }} 
+                                                </span>
+                                            </router-link>
+                                    </p>
+                                </div>
+                            </div>
+                        </div> -->
+                    </div>
+                </div>
+            </div>
+        
+    
+            <template id="producerList" type="text/div">
+                <div class="table-responsive">
+                    <el-row>
+                        <el-button type="primary" plain @click="visuliazeProducers">Visualize Producer Voters</el-button>
+                    </el-row>
+                    <el-table v-if="!isMobile" v-loading="loading" :data="tableData" empty-text="No data" @selection-change="handleSelectionChange" style="width: 100%">
+                        <el-table-column type="selection" width="45">
+                        </el-table-column>
+                        <el-table-column label="#" width="55" prop="index" sortable>
+                          <template slot-scope="scope">
+                            <span>{{ scope.row.index }}</span>
+                          </template>
+                        </el-table-column>
+    
+                        <el-table-column width="220" label="Producer">
+                          <template slot-scope="scope">
+                                <el-popover trigger="hover" placement="top">
+                                    <p>Producer: {{ scope.row.owner }}</p>
+                                    <p>URL: {{ scope.row.url }}</p>
+                                    <div slot="reference" class="name-wrapper">
+                                            <span class="producer-logo-block">
+                                                <img :src="scope.row.branding.logo_256 ? scope.row.branding.logo_256 : scope.row.branding.logo_1024" v-if="scope.row.branding &amp;&amp; (scope.row.branding.logo_256 || scope.row.branding.logo_1024)" height="50" onerror="this.src='https://votetracker.eosmedi.com/image-o.png'">
+                                            </span>
+                                            <router-link :to="{ name: 'ProducerDetail', params: { producer: scope.row.owner }}" class="producer-list-link">
+                                                <span v-if="scope.row.candidate_name">{{ scope.row.candidate_name }}</span> <span v-if="!scope.row.candidate_name">{{ scope.row.owner }}</span>  
+                                            </router-link>
+                                    </div>
+                                </el-popover>
+                          </template>
+                        </el-table-column>
+    
+                        <el-table-column label="Votes %" width="100">
+                          <template slot-scope="scope">
+                                {{ (parseInt(scope.row.total_votes) / chainState.total_producer_vote_weight * 100).toFixed(3) }}%
+                          </template>
+                        </el-table-column>
+                        <el-table-column label="Votes" width="120">
+                          <template slot-scope="scope">
+                                {{ numberWithCommas((scope.row.total_votes  / calculateVoteWeight() / 10000).toFixed(0)) }}
+                          </template>
+                        </el-table-column>
+    
+                        <el-table-column label="Voters" prop="voters" sortable width="100">
+                            <template slot-scope="scope">
+                                <router-link :to="{ name: 'ProducerDetail', params: { producer: scope.row.owner }}">{{ scope.row.voters }}</router-link>
+                            </template>
+                        </el-table-column>
+    
+                        <el-table-column label="Daily Reward" show-overflow-tooltip="true" width="130">
+                            <template slot-scope="scope">
+                                {{ scope.row.rewards }} EOS
+                            </template>
+                        </el-table-column>
+    
+                        <el-table-column label="Votes Change(48h)" show-overflow-tooltip="true" prop="votes_loss.diff" sortable width="200">
+                            <template slot-scope="scope">
+                                <span v-if="scope.row.votes_loss &amp;&amp; scope.row.votes_loss.diff">
+                                    <span :style="scope.row.votes_loss.diff > 0 ? 'color:green' : 'color:red'">{{ (scope.row.votes_loss.diff).toFixed(0) | numberWithCommas }} EOS</span>
+                                </span>
+                            </template>
+                        </el-table-column>
+    
+                        <el-table-column show-overflow-tooltip="true" label="Location">
+                            <template slot-scope="scope">
+                                <span v-if="scope.row.org_location">{{ scope.row.org_location.name }}</span>
+                                <span v-if="!scope.row.org_location &amp;&amp; scope.row.location">{{ countryCode[scope.row.location] }}</span>
+                            </template>
+                        </el-table-column>
+    
+                        <el-table-column label="Tags">
+                            <template slot-scope="scope">
+                                <el-tag :type="tag === 'Exchange' ? 'primary' : tag === 'Mining pools' ? 'success' : 'info'" disable-transitions v-if="scope.row.tags.length" v-for="tag in scope.row.tags">{{ tag }}</el-tag>
+                            </template>
+                        </el-table-column>
+    
+                        <el-table-column label="URL">
+                            <template slot-scope="scope">
+                                <span v-if="scope.row.url"><a :href="scope.row.url" target="_blank">Website</a></span>
+                            </template>
+                        </el-table-column>
+                    </el-table>
+    
+                    <div v-if="isMobile" class="producers-list" v-loading.fullscreen.lock="loading">
+                        <el-container v-for="(row, index ) in tableData" :class="row.selected ? 'producer-list-item selected' : 'producer-list-item'">
+                            <el-aside width="50px">
+                                <el-popover trigger="hover" placement="top">
+                                    <p>Producer: {{ row.owner }}</p>
+                                    <p>URL: {{ row.url }}</p>
+                                    <div slot="reference" class="name-wrapper">
+                                            <span class="producer-logo-block" style="margin-right:0;margin-top:0px">
+    
+                                                    <img :src="row.branding.logo_256 ? row.branding.logo_256 : row.branding.logo_1024" v-if="row.branding &amp;&amp; (row.branding.logo_256 || row.branding.logo_1024)" height="50" onerror="this.src='https://votetracker.eosmedi.com/image-o.png'">
+                                            
+                                            </span>
+                                    </div>
+                                </el-popover>
+                            </el-aside>
+                            <el-container>
+                                <el-header height="30px">
+                                    <el-container>
+                                        <el-container>
+                                            <el-header height="30px" style="padding-left:0;padding-top:8px;">
+                                                {{ row.index }}. 
+                                                <router-link :to="{ name: 'ProducerDetail', params: { producer: row.owner }}" class="producer-list-link">
+                                                    <span v-if="row.candidate_name">{{ row.candidate_name }}</span> <span v-if="!row.candidate_name">{{ row.owner }}</span>  
+                                                </router-link>
+                                            </el-header>
+                                        </el-container>
+                                        <el-aside width="100px" style="text-align:right;">
+                                            <span style="font-size: 12px;">
+                                                {{ (parseInt(row.total_votes) / chainState.total_producer_vote_weight * 100).toFixed(3) }}%<br>
+                                                {{ numberWithCommas((row.total_votes  / calculateVoteWeight() / 10000).toFixed(0)) }}
+                                            </span>
+                                        </el-aside>
+                                    </el-container>
+                                </el-header>
+                                <el-main>
+                                    <div @click="clickProducer(row)">
+                                        <!-- <p>{{ (parseInt(row.total_votes) / chainState.total_producer_vote_weight * 100).toFixed(3) }}%</p>
+                                        <p>{{ numberWithCommas((row.total_votes  / calculateVoteWeight() / 10000).toFixed(0)) }}</p> -->
+                                        <p>Daily Reward: {{ row.rewards }} EOS</p>
+                                        <p>Voters: <router-link :to="{ name: 'ProducerDetail', params: { producer: row.owner }}">{{ row.voters }}</router-link></p>
+                                        <!-- <p v-if="row.votes_loss &amp;&amp; row.votes_loss.diff">Votes Change(48h): <span>
+                                            <span :style="row.votes_loss.diff > 0 ? 'color:green' : 'color:red'">{{ (row.votes_loss.diff).toFixed(0) | numberWithCommas }} EOS</span>
+                                        </span></p> -->
+                                        <p>Location: <span v-if="row.org_location">{{ row.org_location.name }}</span>
+                                        <span v-if="!row.org_location &amp;&amp; row.location">{{ countryCode[row.location] }}</span></p>
+                                        <p><el-tag :type="tag === 'Exchange' ? 'primary' : tag === 'Mining pools' ? 'success' : 'info'" disable-transitions v-if="row.tags.length" v-for="tag in row.tags">{{ tag }}</el-tag></p> 
+                                        <span v-if="row.url"><a :href="row.url" target="_blank">Website</a></span>
+                                    </div>
+                                </el-main>
+                            </el-container>
+                        </el-container>
+                    </div>
+    
+                    <page :current="currentPage" :allpage="totalPage" ref="page" v-if="!filterProducers"></page>
+                    <table class="table table-hover" v-if="0">
+                        <thead>
+                            <tr>
+                                <th scope="col">#</th>
+                                <th scope="col">Producer</th>
+                                <th scope="col">Votes %</th>
+                                <th scope="col">Votes</th>
+                                <th scope="col">Voters</th>
+                                <th scope="col">Location</th>
+                                <th scope="col">URL</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr v-if="loading">
+                                <td cols="7">Loading data....</td>
+                            </tr>
+                            <tr v-for="(producer, index ) in producers" v-if="producer.show">
+                                <th scope="row">{{ index+1 }}</th>
+                                <td>
+                                    <router-link :to="{ name: 'ProducerDetail', params: { producer: producer.owner }}">{{ producer.owner }} </router-link>
+                                </td>
+                                <td>{{ (parseInt(producer.total_votes) / chainState.total_producer_vote_weight * 100).toFixed(3) }}%</td>
+                                <td>{{ numberWithCommas((producer.total_votes  / calculateVoteWeight() / 10000).toFixed(0)) }}</td>
+                                <!-- <td>{{ cacluteReawrdcacluteReawrd(index, producer, chainState, t) }} EOS</td> -->
+                                <td>
+                                    <router-link :to="{ name: 'ProducerDetail', params: { producer: producer.owner }}">{{ producer.voters }}</router-link>
+                                </td>
+                                <td>
+                                    <span v-if="producer.location">{{ countryCode[producer.location] }}</span>
+                                </td>
+                                <td>{{ producer.url }}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </template>
+    
+    
+            <template id="ProxyList" type="text/div">
+                <div>
+                    <!-- <el-alert
+                    title="you can submit your proxy info to https://docs.google.com/forms/d/1S-7enRUlmWm18GqBORdv6GJuzCN6Tk0bNUe8r5vH_6Q"
+                    show-icon
+                    type="info"></el-alert> -->
+    
+                    <div role="alert" class="el-alert el-alert--info"><i class="el-alert__icon el-icon-info"></i><div class="el-alert__content"><span class="el-alert__title">Below is the list of active vote proxy accounts on the EOS mainnet.  to register more info about yourself see the <a href="https://github.com/AlohaEOS/eos-proxyinfo" target="_blank">instructions here</a>.</span><!----></div></div>
+                    <el-row style="margin-top:10px">
+                        <router-link :to="{ name: 'SubmitProxyInfo'}"> <el-button type="info">Submit Proxy Info</el-button></router-link>
+                    </el-row>
+    
+                    <div v-if="isMobile" class="producers-list" v-loading.fullscreen.lock="loading">
+                        <el-container v-for="(row, index ) in voters" :class="row.selected ? 'producer-list-item selected' : 'producer-list-item'">
+                            <el-aside width="50px">
+                                <el-popover trigger="hover" placement="top">
+                                    <p v-if="row.info">Producer: {{ row.info.fullName }}</p>
+                                    <div slot="reference" class="name-wrapper">
+                                            <span class="producer-logo-block" style="margin-right:0;margin-top:0px">
+                                                <img :src="row.info.logo" v-if="row.info &amp;&amp; row.info.logo" height="50" onerror="this.src='https://votetracker.eosmedi.com/image-o.png'">
+                                                <img src="https://votetracker.eosmedi.com/image-o.png" v-if="!row.info" height="50">
+                                            </span>
+                                    </div>
+                                </el-popover>
+                            </el-aside>
+                            <el-container>
+                                <el-header height="22px">
+                                    <el-container>
+                                        <el-container>
+                                            <el-header height="22px" style="padding-left:0;">
+                                                {{ index+1 }}. 
+                                                <router-link :to="{ name: 'VoterDetail', params: { voter: row.account_name }}">
+                                                    {{ row.account_name }}
+                                                    <span v-if="row.candidate_name">{{ row.account_name }}</span> 
+                                                    <span v-if="!row.candidate_name">{{ row.owner }}</span>  
+                                                </router-link>
+                                            </el-header>
+                                        </el-container>
+                                        <el-aside width="100px" style="text-align:right;">
+                                            <span>
+                                                {{ numberWithCommas((row.voter_info.staked / 10000 ).toFixed(0)) }}
+                                            </span>
+                                        </el-aside>
+                                    </el-container>
+                                </el-header>
+                                <el-main>
+                                    <div @click="clickProducer(row)">
+                                        <p v-if="row.info">
+                                            Full Name: <br><span class="p-value"> {{ row.info.fullName }}</span>
+                                        </p>
+                                        <p v-if="row.info">
+                                            Slogan: <br><span class="p-value"> {{ row.info.slogan }}</span>
+                                        </p>
+                                        <p> Proxy Voters: 
+                                            <router-link :to="{ name: 'VoterDetail', params: { voter: row.account_name }}">
+                                                {{ row.proxy_voters.length }}
+                                            </router-link>
+                                        </p>
+                                        <p v-if="row.info &amp;&amp; row.info.location">
+                                           Location: <span class="p-value">{{ row.info.location }}</span>
+                                        </p>
+                                        <p v-if="row.info">
+                                            <span v-if="row.info" class="p-value"><a :href="row.info.url" target="_blank">Website</a></span>
+                                        </p>
+                                    </div>
+                                </el-main>
+                            </el-container>
+                        </el-container>
+                    </div>
+    
+    
+                    <el-table v-if="!isMobile" class="proxy-list" v-loading="loading" v-loading="loading" :data="voters" empty-text="No data" style="width: 100%">
+    
+                        <el-table-column type="index">
+                        </el-table-column>
+    
+                        <el-table-column width="220" label="Proxy Account">
+                            <template slot-scope="scope">
+                                <span class="producer-logo-block">
+                                                <img :src="scope.row.info.logo" v-if="scope.row.info &amp;&amp; scope.row.info.logo" height="50" onerror="this.src='https://votetracker.eosmedi.com/image-o.png'">
+                                                <img src="https://votetracker.eosmedi.com/image-o.png" v-if="!scope.row.info" height="50">
+                                            </span>
+                                            <router-link :to="{ name: 'VoterDetail', params: { voter: scope.row.account_name }}">
+                                                {{ scope.row.account_name }}
+                                                <span v-if="scope.row.candidate_name">{{ scope.row.account_name }}</span> <span v-if="!scope.row.candidate_name">{{ scope.row.owner }}</span>  
+                                            </router-link>
+                            </template>
+                        </el-table-column>
+                        <el-table-column width="150" label="Staked">
+                          <template slot-scope="scope">
+                                {{ numberWithCommas((scope.row.voter_info.staked / 10000 ).toFixed(0)) }} EOS
+                          </template>
+                        </el-table-column>
+                        <el-table-column width="150" label="Voted Producers">
+                          <template slot-scope="scope">
+                                <router-link :to="{ name: 'VoterDetail', params: { voter: scope.row.account_name }}">{{ scope.row.voter_info.producers.length }}</router-link>
+                          </template>
+                        </el-table-column>
+                        <el-table-column width="150" label="Proxy Voters">
+                            <template slot-scope="scope">
+                                <!-- <el-tag v-for="proxy_voter in scope.row.proxy_voters" type="info"> 
+                                    <router-link :to="{ name: 'VoterDetail', params: { voter: proxy_voter }}">
+                                        {{ proxy_voter }}
+                                    </router-link>
+                                </el-tag> -->
+                                <router-link :to="{ name: 'VoterDetail', params: { voter: scope.row.account_name }}">{{ scope.row.proxy_voters.length }}</router-link>
+                          </template>
+                        </el-table-column>
+    
+                        <el-table-column show-overflow-tooltip="true" width="160" label="Full Name">
+                            <template slot-scope="scope">
+                               <span v-if="scope.row.info"> {{ scope.row.info.fullName }}</span>
+                            </template>
+                        </el-table-column>
+    
+                        <el-table-column show-overflow-tooltip="true" label="Slogan">
+                            <template slot-scope="scope">
+                                <span v-if="scope.row.info"> {{ scope.row.info.slogan }}</span> 
+                            </template>
+                        </el-table-column>
+    
+                        <el-table-column show-overflow-tooltip="true" label="Location">
+                            <template slot-scope="scope">
+                               <span v-if="scope.row.info"> {{ scope.row.info.location }}</span>    
+                            </template>
+                        </el-table-column>
+    
+                        <el-table-column show-overflow-tooltip="true" label="URL">
+                            <template slot-scope="scope">
+                                <span v-if="scope.row.info"> <a :href="scope.row.info.url" target="_blank">WebSite</a></span>    
+                            </template>
+                        </el-table-column>
+                        
+                    </el-table>
+                    <page :current="currentPage" :allpage="totalPage" ref="page"></page>
+                </div>
+            </template>
+        
+        
+            <template id="VoterList" type="text/div">
+                <div>
+    
+                    <el-table v-loading="loading" v-loading="loading" :data="voters" empty-text="No data" style="width: 100%">
+    
+                        <el-table-column type="index">
+                        </el-table-column>
+    
+                        <el-table-column label="Voter Account">
+                            <template slot-scope="scope">
+                                <router-link :to="{ name: 'VoterDetail', params: { voter: scope.row.account_name }}">{{ scope.row.account_name }}</router-link>
+                            </template>
+                        </el-table-column>
+                        <el-table-column label="Staked">
+                          <template slot-scope="scope">
+                                {{ numberWithCommas((scope.row.voter_info.staked / 10000 ).toFixed(0)) }} EOS
+                          </template>
+                        </el-table-column>
+                        <el-table-column label="Voted Producers">
+                          <template slot-scope="scope">
+                                <router-link :to="{ name: 'VoterDetail', params: { voter: scope.row.account_name }}">{{ scope.row.voter_info.producers.length }}</router-link>
+                          </template>
+                        </el-table-column>
+                        <el-table-column label="Tags">
+                            <template slot-scope="scope">
+                                <el-tag v-if="scope.row.voter_info &amp;&amp; scope.row.voter_info.is_proxy">Proxy</el-tag>
+                            </template>
+                        </el-table-column>
+                    </el-table>
+                    <page :current="currentPage" :allpage="totalPage" ref="page"></page>
+                </div>
+            </template>
+        
+        
+            <template id="producerDetail" type="text/div">
+                <div>
+                    <div v-if="loading">
+                        Loading data...
+                    </div>
+                    <el-container class="detail-info-block" v-if="producer.bpinfo">
+                        <el-aside width="135px">
+                            <div class="detail-logo-block">
+                                <img :src="producer.bpinfo.org.branding.logo_256 ? producer.bpinfo.org.branding.logo_256 : producer.bpinfo.org.branding.logo_1024" v-if="producer.bpinfo.org &amp;&amp; producer.bpinfo.org.branding &amp;&amp; (producer.bpinfo.org.branding.logo_256 || producer.bpinfo.org.branding.logo_1024)" height="120" onerror="this.src='https://votetracker.eosmedi.com/image-o.png'">
+                                <img src="https://votetracker.eosmedi.com/image-o.png" v-if="!producer.bpinfo.org" height="120">
+                            </div>
+                        </el-aside>
+                        <el-main>
+                            <h4><span v-if="producer.bpinfo &amp;&amp; producer.bpinfo.org &amp;&amp; producer.bpinfo.org.candidate_name">{{ producer.bpinfo.org.candidate_name }} - </span>{{ producer.producer.owner }}</h4>
+                            <p class="detail-links" v-if="producer.bpinfo.org">
+                                <span class="" v-if="producer.bpinfo.org &amp;&amp; producer.bpinfo.org.social &amp;&amp; producer.bpinfo.org.social.telegram"><a :href="'https://t.me/'+producer.bpinfo.org.social.telegram" target="_blank"><i class="fab fa-telegram"></i> Telegram</a> </span>
+                                <span><i class="fas fa-location-arrow"></i> {{ producer.bpinfo.org.location.name }}  </span>
+                            </p>
+                            <p class="detail-links" v-if="producer.bpinfo &amp;&amp; producer.bpinfo.org">
+                               <span>{{ producer.bpinfo.org.website }}</span> 
+                               <span>{{ producer.bpinfo.org.email }}</span>
+                            </p>
+                        </el-main>
+                    </el-container>
+    
+             
+                    <div class="col-14 col-md-9 col-xl-12 py-md-4 pb-md-1 pl-md-3 bd-content" v-if="producer.producer">
+                        <div class="row">
+                            <div class="col-sm">
+                                    <div class="detail-info-desc">
+                                        <h5>Detail</h5>
+                                        <div class="detail-info-desc-content">
+                                            <strong>Node List</strong>
+                                            <ul v-for="node in producer.bpinfo.nodes">
+                                                <li>node_type: {{ node.node_type }}</li>
+                                                <li>location: {{ node.location.name }}, {{ node.location.country }}</li>
+                                                <li>api_endpoint: {{ node.api_endpoint }} </li>
+                                                <li>ssl_endpoint: {{ node.ssl_endpoint }}  </li>
+                                                <li>p2p_endpoint: {{ node.p2p_endpoint }} </li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                            </div>
+    
+                            <div class="col-sm">
+                                <h5 style="margin-bottom: 32px;">Producer Data</h5>
+                                <div role="alert" id="producerInfo">
+                                        <p>Producer:  <span class="item-value">{{ producer.producer.owner }}</span></p>
+                                        <p>URL:  <span class="item-value">{{ producer.producer.url }}</span>
+                                        </p>
+                                        <p>Total Votes %:  <span class="item-value">{{ (parseInt(producer.producer.total_votes) / chainState.total_producer_vote_weight * 100).toFixed(3) }}%</span></p>
+                                        <p>Votes:  <span class="item-value">{{ numberWithCommas((producer.producer.total_votes  / calculateVoteWeight() / 10000).toFixed(0)) }}</span></p>
+                                        <p>Voters:  <span class="item-value">{{ producer.producer.voters }}</span></p>
+                                        <!-- <p>Votes Change(48h):  <span class="item-value">
+                                                <span :style="producer.total.diff > 0 ? 'color:green' : 'color:red'">{{ (producer.total.diff).toFixed(0) | numberWithCommas }} EOS</span>
+                                        </span></p> -->
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+    
+                    <div class="col-14 col-md-9 col-xl-12 py-md-4 pb-md-5 pl-md-3 bd-content" v-if="producer.producer">
+                        <!-- <div class="row">
+                            <div class="col-sm">
+                                <pie :data="removeChart.data" :name="removeChart.name" :subname="removeChart.subname"></pie>
+                            </div>
+                            <div class="col-sm">
+                                    <pie :data="addChart.data" :name="addChart.name" :subname="addChart.subname"></pie>
+                            </div>
+                        </div> -->
+                        <!-- <p>aggregate by latest(48h) remove / add vote logs</p> -->
+                    </div>
+    
+                    <el-table :data="producer.voters" empty-text="No data" v-loading="loading" style="width: 100%">
+    
+                        <el-table-column type="index">
+                        </el-table-column>
+    
+                        <el-table-column label="Voter Account">
+                            <template slot-scope="scope">
+                                <router-link :to="{ name: 'VoterDetail', params: { voter: scope.row.owner }}">{{ scope.row.owner }}</router-link>
+                            </template>
+                        </el-table-column>
+                        <el-table-column label="Staked">
+                          <template slot-scope="scope">
+                                {{ numberWithCommas((scope.row.staked / 10000 ).toFixed(0)) }} EOS
+                          </template>
+                        </el-table-column>
+                        <el-table-column label="Voted Producers">
+                          <template slot-scope="scope">
+                                <router-link :to="{ name: 'VoterDetail', params: { voter: scope.row.account_name }}">{{ scope.row.producers.length }}</router-link>
+                          </template>
+                        </el-table-column>
+                        <el-table-column label="Tags">
+                            <template slot-scope="scope">
+                                <el-tag v-if="scope.row.is_proxy">Proxy</el-tag>
+                            </template>
+                        </el-table-column>
+                    </el-table>
+                    <page :current="currentPage" :allpage="totalPage" ref="page"></page>
+                </div>
+            </template>
+        
+        
+            <template id="VoterDetail" type="text/div">
+                <div v-loading.fullscreen.lock="loading">
+                    <el-container class="detail-info-block">
+                        <el-aside width="135px">
+                            <div class="detail-logo-block">
+                                <img :src="voter.info.logo" v-if="voter.info &amp;&amp; voter.info.logo" height="120" onerror="this.src='https://votetracker.eosmedi.com/image-o.png'">
+                                <img src="https://votetracker.eosmedi.com/image-o.png" v-if="!voter.info" height="120">
+                            </div>
+                        </el-aside>
+                        <el-main>
+                            <h4><span v-if="voter.info &amp;&amp; voter.info.fullName">{{ voter.info.fullName }} - </span>{{ voter.account_name }}</h4>
+                            <p v-if="voter.info" class="detail-slogan">{{ voter.info.slogan }}</p>
+                            <p v-if="!voter.info" class="detail-slogan">unknow</p>
+                            <p v-if="voter.info" class="detail-links">
+                                <span class=""><a :href="'https://t.me/'+voter.info.telegram" target="_blank"><i class="fab fa-telegram"></i> Telegram</a> </span>
+                                <span v-if="voter.info.url"><a :href="voter.info.url" target="_blank"><i class="fas fa-link"></i> Link</a> </span>
+                                <span v-if="voter.info.location"><i class="fas fa-location-arrow"></i> {{ voter.info.location }}  </span>
+                            </p>
+                        </el-main>
+                    </el-container>
+    
+                    <div class="col-14 col-md-9 col-xl-12 py-md-4 pb-md-5 pl-md-3 bd-content">
+                        <div class="row">
+                            <div class="col-sm" v-if="voter.info">
+                                <div class="detail-info-desc">
+                                    <h5>Description</h5>
+                                    <div class="detail-info-desc-content">
+                                        <strong>Philosophy</strong>
+                                        <p>{{ voter.info.philosophy }}</p>
+                                        <strong>Background</strong>
+                                        <p>{{ voter.info.background }}</p>
+                                    </div>
+                                </div>
+                            </div>
+    
+                            <div class="col-sm">
+                                <h5 style="margin-bottom: 32px;">Account Data</h5>
+                                <div role="alert" id="producerInfo">
+                                        <p>Account Name:  <span class="item-value">{{ voter.account_name }}</span></p>
+                                        <p v-if="voter.blance.length">Balance:  <span v-for="blanceItem in voter.blance" class="item-value">{{ blanceItem }}</span>
+                                        </p>
+                                        <p>Staked EOS:  <span class="item-value">{{ numberWithCommas((voter.voter_info.staked / 10000).toFixed(0)) }} EOS</span></p>
+                                        <p v-if="voter.eth">ETH Address: 
+                                            <span class="item-value"><a :href="'https://etherscan.io/address/' + voter.eth" target="_blank">{{ voter.eth }}</a></span> 
+                                        </p>
+                
+                                        <p v-if="voter.proxy_voters">
+                                            Proxy Votes From: <br>
+                                            <span class="item-value">
+                                                <el-tag v-for="proxy_voter in voter.all_proxy_voters" type="info" v-if="voter.all_proxy_voters"> 
+                                                    <router-link :to="{ name: 'VoterDetail', params: { voter: proxy_voter.voter }}" target="_blank">
+                                                        {{ proxy_voter.voter }} {{ (proxy_voter.staked / 10000).toFixed(0) }} EOS
+                                                    </router-link>
+                                                </el-tag>
+                                            </span>
+                                        </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div v-if="voter.actions" class="voter-actions">
+                        <h5>Vote Actions</h5>
+                        <ul>
+                            <li v-for="(voteAction, index) in voter.actions">
+                                <a @click="viewBlock(voteAction.block_num, voteAction, index)">#{{ voteAction.block_num }}</a> <span v-if="voteAction.timestamp">{{ voteAction.timestamp | date }}</span>  <span v-if="!voteAction.timestamp">unknow(early logs we didn't store timestamp) {{ viewBlock(voteAction.block_num, voteAction, index) }}</span>
+    
+                                <ul>
+                                    <li v-if="voteAction.canceled.length" class="cancel-action">Remove Producers(-{{voteAction.canceled.length}}): 
+                                        <el-tag type="info" v-for="canceldProducer in voteAction.canceled" disable-transitions>
+                                            <router-link :to="{ name: 'ProducerDetail', params: { producer: canceldProducer }}" class="producer-list-link">  {{ canceldProducer }} </router-link>
+                                        </el-tag>
+                                    </li>
+    
+                                    <li v-if="voteAction.detal.length" class="detal-action">Add Producers(+{{voteAction.detal.length}}):
+                                         <el-tag type="info" v-for="detalProducer in voteAction.detal" disable-transitions>
+                                            <router-link :to="{ name: 'ProducerDetail', params: { producer: detalProducer }}" class="producer-list-link">  {{ detalProducer }} </router-link>
+                                        </el-tag>
+                                    </li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </div>
+                     <!-- <treemap :name="chart.chartName" :data="chart.chartData" v-for="chart in charts"></treemap> -->
+                    <producers-list :chain-state="chainState" :filter-producers="voter.voter_info.producers"></producers-list>
+                </div>
+            </template>
+    
+            <script type="text/x-template" id="SubmitProxyInfo">
+                <div  class="ol-14 col-md-12 col-xl-10 py-md-5 pl-md-5 pr-md-5 center-block" style="padding-top:15px; border: 1px solid #eee">
+                        <el-form ref="form" :model="form" label-width="80px">
+                                <el-form-item label="Full Name">
+                                  <el-input v-model="form.name"></el-input>
+                                </el-form-item>
+                                <el-form-item label="Slogan">
+                                        <el-input v-model="form.slogan"></el-input>
+                                </el-form-item>
+                                <el-form-item label="Philosophy">
+                                    <el-input type="textarea" v-model="form.philosophy"></el-input>
+                                </el-form-item>
+                                <el-form-item label="Background">
+                                    <el-input type="textarea" v-model="form.background"></el-input>
+                                </el-form-item>
+    
+                                <el-form-item label="Website">
+                                    <el-input v-model="form.website"></el-input>
+                                </el-form-item>
+                            
+                                <el-form-item label="Logo">
+                                    <el-input v-model="form.logo_256"></el-input>
+                                </el-form-item>
+    
+                                <el-form-item label="Telegram">
+                                    <el-input v-model="form.telegram"></el-input>
+                                </el-form-item>
+    
+                                <el-form-item label="Steemit">
+                                    <el-input v-model="form.steemit"></el-input>
+                                </el-form-item>
+    
+                                <el-form-item label="Twitter">
+                                    <el-input v-model="form.twitter"></el-input>
+                                </el-form-item>
+    
+                                <el-form-item label="Wechat">
+                                    <el-input v-model="form.wechat"></el-input>
+                                </el-form-item>
+                               
+                                <el-form-item>
+                                  <el-button type="primary" @click="onSubmit">Submit</el-button>
+                                </el-form-item>
+                              </el-form>
+    
+                             <el-dialog
+                                :title="dialogTitle"
+                                :visible.sync="centerDialogVisible"
+                                width="30%"
+                                center>
+                                <div v-html="dialogMessage">{{ dialogMessage }}</div>
+                                <span slot="footer" class="dialog-footer">
+                                </span>
+                            </el-dialog>
+    
+                </div>
+            </script>
+    
+            
+    
+            <script type="text/x-template" id="VoterStruct">
+                <div v-loading.fullscreen.lock="loading">
+                    <div class="" style="padding-bottom:50px"></div>
+                    <treemap :name="chart.chartName" :data="chart.chartData" v-for="chart in charts"></treemap>
+                </div>
+            </script>
+    
+            <script type="text/x-template" id="treemap">
+                <div ref="chart" style="width: auto; height: 500px; position: relative;margin-bottom:60px;">
+                </div>
+            </script>
+    
+            <script type="text/x-template" id="pie">
+                <div ref="chart" style=" width:450px;height: 350px; position: relative;">
+                </div>
+            </script>
+    
+            <script type="text/x-template" id="page">
+                <ul class="pagination" >
+                    <li class="page-item" v-show="current != 1" @click="current-- && goto(current)" ><a href="#" class="page-link">Prev</a></li>
+                    <li class="page-item" v-for="index in pages" @click="goto(index)" :class="{'active':current == index}" :key="index">
+                      <a href="#" class="page-link">{{index}}</a>
+                    </li>
+                    <li class="page-item"  v-show="allpage != current && allpage != 0 " @click="current++ && goto(current++)"><a href="#" class="page-link">Next</a></li>
+                </ul>
+            </script>
+        
+            <script>
+                var countryCode = { 4: "Afghanistan", 8: "Albania", 10: "Antarctica", 12: "Algeria", 16: "American Samoa", 20: "Andorra", 24: "Angola", 28: "Antigua and Barbuda", 31: "Azerbaijan", 32: "Argentina", 36: "Australia", 40: "Austria", 44: "Bahamas", 48: "Bahrain", 50: "Bangladesh", 51: "Armenia", 52: "Barbados", 56: "Belgium", 60: "Bermuda", 64: "Bhutan", 68: "Bolivia", 70: "Bosnia and Herzegovina", 72: "Botswana", 74: "Bouvet Island", 76: "Brazil", 84: "Belize", 86: "British Indian Ocean Territory", 90: "Solomon Islands", 92: "Virgin Islands", 96: "Brunei Darussalam", 100: "Bulgaria", 104: "Myanmar", 108: "Burundi", 112: "Belarus", 116: "Cambodia", 120: "Cameroon", 124: "Canada", 132: "Cabo Verde", 136: "Cayman Islands", 140: "Central African Republic", 144: "Sri Lanka", 148: "Chad", 152: "Chile", 156: "China", 158: "Taiwan, Province of China", 162: "Christmas Island", 166: "Cocos (Keeling) Islands", 170: "Colombia", 174: "Comoros", 175: "Mayotte", 178: "Congo", 180: "Congo", 184: "Cook Islands", 188: "Costa Rica", 191: "Croatia", 192: "Cuba", 196: "Cyprus", 203: "Czechia", 204: "Benin", 208: "Denmark", 212: "Dominica", 214: "Dominican Republic", 218: "Ecuador", 222: "El Salvador", 226: "Equatorial Guinea", 231: "Ethiopia", 232: "Eritrea", 233: "Estonia", 234: "Faroe Islands", 238: "Falkland Islands", 239: "South Georgia and the South Sandwich Islands", 242: "Fiji", 246: "Finland", 248: "Åland Islands", 250: "France", 254: "French Guiana", 258: "French Polynesia", 260: "French Southern Territories", 262: "Djibouti", 266: "Gabon", 268: "Georgia", 270: "Gambia", 275: "Palestine, State of", 276: "Germany", 288: "Ghana", 292: "Gibraltar", 296: "Kiribati", 300: "Greece", 304: "Greenland", 308: "Grenada", 312: "Guadeloupe", 316: "Guam", 320: "Guatemala", 324: "Guinea", 328: "Guyana", 332: "Haiti", 334: "Heard Island and McDonald Islands", 336: "Holy See", 340: "Honduras", 344: "Hong Kong", 348: "Hungary", 352: "Iceland", 356: "India", 360: "Indonesia", 364: "Iran", 368: "Iraq", 372: "Ireland", 376: "Israel", 380: "Italy", 384: "Côte d'Ivoire", 388: "Jamaica", 392: "Japan", 398: "Kazakhstan", 400: "Jordan", 404: "Kenya", 408: "Korea (Democratic People's Republic of)", 410: "Korea (Republic of)", 414: "Kuwait", 417: "Kyrgyzstan", 418: "Lao People's Democratic Republic", 422: "Lebanon", 426: "Lesotho", 428: "Latvia", 430: "Liberia", 434: "Libya", 438: "Liechtenstein", 440: "Lithuania", 442: "Luxembourg", 446: "Macao", 450: "Madagascar", 454: "Malawi", 458: "Malaysia", 462: "Maldives", 466: "Mali", 470: "Malta", 474: "Martinique", 478: "Mauritania", 480: "Mauritius", 484: "Mexico", 492: "Monaco", 496: "Mongolia", 498: "Moldova", 499: "Montenegro", 500: "Montserrat", 504: "Morocco", 508: "Mozambique", 512: "Oman", 516: "Namibia", 520: "Nauru", 524: "Nepal", 528: "Netherlands", 531: "Curaçao", 533: "Aruba", 534: "Sint Maarten", 535: "Bonaire, Sint Eustatius and Saba", 540: "New Caledonia", 548: "Vanuatu", 554: "New Zealand", 558: "Nicaragua", 562: "Niger", 566: "Nigeria", 570: "Niue", 574: "Norfolk Island", 578: "Norway", 580: "Northern Mariana Islands", 581: "United States Minor Outlying Islands", 583: "Micronesia", 584: "Marshall Islands", 585: "Palau", 586: "Pakistan", 591: "Panama", 598: "Papua New Guinea", 600: "Paraguay", 604: "Peru", 608: "Philippines", 612: "Pitcairn", 616: "Poland", 620: "Portugal", 624: "Guinea-Bissau", 626: "Timor-Leste", 630: "Puerto Rico", 634: "Qatar", 638: "Réunion", 642: "Romania", 643: "Russian Federation", 646: "Rwanda", 652: "Saint Barthélemy", 654: "Saint Helena, Ascension and Tristan da Cunha", 659: "Saint Kitts and Nevis", 660: "Anguilla", 662: "Saint Lucia", 663: "Saint Martin", 666: "Saint Pierre and Miquelon", 670: "Saint Vincent and the Grenadines", 674: "San Marino", 678: "Sao Tome and Principe", 682: "Saudi Arabia", 686: "Senegal", 688: "Serbia", 690: "Seychelles", 694: "Sierra Leone", 702: "Singapore", 703: "Slovakia", 704: "Viet Nam", 705: "Slovenia", 706: "Somalia", 710: "South Africa", 716: "Zimbabwe", 724: "Spain", 728: "South Sudan", 729: "Sudan", 732: "Western Sahara", 740: "Suriname", 744: "Svalbard and Jan Mayen", 748: "Swaziland", 752: "Sweden", 756: "Switzerland", 760: "Syrian Arab Republic", 762: "Tajikistan", 764: "Thailand", 768: "Togo", 772: "Tokelau", 776: "Tonga", 780: "Trinidad and Tobago", 784: "United Arab Emirates", 788: "Tunisia", 792: "Turkey", 795: "Turkmenistan", 796: "Turks and Caicos Islands", 798: "Tuvalu", 800: "Uganda", 804: "Ukraine", 807: "Macedonia", 818: "Egypt", 826: "United Kingdom", 831: "Guernsey", 832: "Jersey", 833: "Isle of Man", 834: "Tanzania", 840: "United States of America", 850: "Virgin Islands", 854: "Burkina Faso", 858: "Uruguay", 860: "Uzbekistan", 862: "Venezuela", 876: "Wallis and Futuna", 882: "Samoa", 887: "Yemen", 894: "Zambia" };
+                var chainState = {};
+        
+                Vue.component("page", {
+                    template: "#page",
+                    props: ["current", "allpage"],
+                    data: function () {
+                        console.log("page", this.current);
+                        return {
+                            showItem: 5,
+                            allpage: 13
+                        }
+                    },
+                    computed: {
+                        pages: function () {
+                            var pag = [];
+                            if (this.current < this.showItem) {
+                                var i = Math.min(this.showItem, this.allpage);
+                                while (i) {
+                                    pag.unshift(i--);
+                                }
+                            } else {
+                                var middle = this.current - Math.floor(this.showItem / 2),
+                                    i = this.showItem;
+                                if (middle > (this.allpage - this.showItem)) {
+                                    middle = (this.allpage - this.showItem) + 1
+                                }
+                                while (i--) {
+                                    pag.push(middle++);
+                                }
+                            }
+                            return pag
+                        }
+                    },
+                    methods: {
+                        goto: function (index) {
+                            if (index == this.current) return;
+                            this.current = index;
+                            this.$emit("pageChange", this.current);
+                            if(window.scrollTo){
+                                window.scrollTo( 0, 0 ); 
+                            }
+                        }
+                    }
+                })
+    
+                Vue.filter('numberWithCommas', function (x) {
+                    x = x.toString();
+                    var pattern = /(-?\d+)(\d{3})/;
+                    while (pattern.test(x))
+                    x = x.replace(pattern, "$1,$2");
+                    return x;
+                })
+    
+    
+                Vue.filter('date', function (x) { 
+                    return moment.utc(x).utcOffset(moment().utcOffset()).format("llll");;
+                })
+    
+                var producerTags = {
+                    bitfinexeos1: ["Exchange"],
+                    eoshuobipool: ["Exchange"],
+                    zbeosbp11111: ["Exchange"],
+                    okcapitalbp1: ["Exchange"],
+                    eosantpoolbp: ["Mining pools"]
+                };
+    
+                Vue.component("treemap", {
+                    template: "#treemap",
+                    props: ["data", "name"],
+                    data: function () {
+                        console.log("page", this.current);
+                        return {
+                            myChart: null
+                        }
+                    },
+    
+                    mounted: function(){
+                        console.log(this.$refs.chart);
+                        this.myChart = this.$echarts.init(this.$refs.chart);
+                        this.renderChart();
+                    },
+    
+                    watch:{
+                        data: function (newVal, oldVal) {
+                            this.renderChart();
+                        },
+                    },
+                    methods: {
+                        renderChart: function (index) {
+                            var myChart = this.myChart;
+                            var formatUtil = echarts.format;
+                            function getLevelOption() {
+                                return [
+                                    {
+                                        itemStyle: {
+                                            normal: {
+                                                borderColor: '#777',
+                                                borderWidth: 0,
+                                                gapWidth: 1
+                                            }
+                                        },
+                                        upperLabel: {
+                                            normal: {
+                                                show: false
+                                            }
+                                        }
+                                    },
+                                    {
+                                        itemStyle: {
+                                            normal: {
+                                                borderColor: '#555',
+                                                borderWidth: 5,
+                                                gapWidth: 1
+                                            },
+                                            emphasis: {
+                                                borderColor: '#ddd'
+                                            }
+                                        }
+                                    },
+                                    {
+                                        colorSaturation: [0.35, 0.5],
+                                        itemStyle: {
+                                            normal: {
+                                                borderWidth: 5,
+                                                gapWidth: 1,
+                                                borderColorSaturation: 0.6
+                                            }
+                                        }
+                                    }
+                                ];
+                            }
+    
+    
+                            console.log("data", this.data);
+                        
+                            myChart.setOption(option = {
+                                title: {
+                                    text: this.name,
+                                    left: 'center'
+                                },
+                        
+                                tooltip: {
+                                    formatter: function (info) {
+                                        var value = info.value;
+                                        var treePathInfo = info.treePathInfo;
+                                        var treePath = [];
+                        
+                                        for (var i = 1; i < treePathInfo.length; i++) {
+                                            treePath.push(treePathInfo[i].name);
+                                        }
+                        
+                                        return [
+                                            '<div class="tooltip-title">' + formatUtil.encodeHTML(treePath.join('/')) + '</div>',
+                                            'Staked: ' + formatUtil.addCommas(value) + ' EOS',
+                                        ].join('');
+                                    }
+                                },
+                        
+                                series: [
+                                    {
+                                        name:'Voters',
+                                        type:'treemap',
+                                        visibleMin: 300,
+                                        label: {
+                                            show: true,
+                                            formatter: '{b}'
+                                        },
+                                        upperLabel: {
+                                            normal: {
+                                                show: true,
+                                                height: 30
+                                            }
+                                        },
+                                        itemStyle: {
+                                            normal: {
+                                                borderColor: '#fff'
+                                            }
+                                        },
+                                        levels: getLevelOption(),
+                                        data: this.data
+                                    }
+                                ]
+                            });
+                        }
+                    }
+                })
+    
+    
+                Vue.component("pie", {
+                    template: "#pie",
+                    props: ["data", "name", "subname"],
+                    data: function () {
+                        console.log("page", this.current);
+                        return {
+                            myChart: null
+                        }
+                    },
+    
+                    mounted: function(){
+                        console.log(this.$refs.chart);
+                        this.myChart = this.$echarts.init(this.$refs.chart);
+                        this.renderChart();
+                    },
+    
+                    watch:{
+                        data: function (newVal, oldVal) {
+                            this.renderChart();
+                        },
+                    },
+                    methods: {
+                        renderChart: function (index) {
+                            var myChart = this.myChart;
+                            var formatUtil = echarts.format;
+                            console.log("data", this.data);
+                            myChart.setOption({
+                                title : {
+                                    text: this.name,
+                                    subtext: this.subname,
+                                    x:'center'
+                                },
+                                tooltip : {
+                                    trigger: 'item',
+                                    formatter: "{a} <br/>{b} : {c} EOS ({d}%)"
+                                },
+                                calculable : true,
+                                series : [
+                                    {
+                                        name:'Votes',
+                                    itemStyle : {
+                                            normal : {
+                                                label : {
+                                                    show : false   //隐藏标示文字
+                                                },
+                                                labelLine : {
+                                                    show : false   //隐藏标示线
+                                                }
+                                            }
+                                        },
+                                        type:'pie',
+                                        radius : '55%',
+                                        center: ['50%', '60%'],
+                                        data: this.data
+                                    }
+                                ]
+                            });
+                        }
+                    }
+                })
+        
+                var axiosInstance = axios.create();
+                Vue.prototype.API = axiosInstance;
+                axiosInstance.defaults.params = {};
+                axiosInstance.defaults.baseURL = "https://compiler.dev4eos.com:8080/"
+    
+                Vue.prototype.$echarts = echarts;
+    
+                function isMobileResolution(){
+                    var width = window.innerWidth;
+                    if(width && width < 800){
+                        return true;
+                    }
+                    return false;
+                }
+    
+                var isMobile = isMobileResolution();
+    
+                window.onresize = function(evt){
+                    isMobile = isMobileResolution();
+                    console.log("isMobile", isMobile);
+                }
+    
+                Vue.prototype.isMobile = isMobile;
+        
+                var ProducersList = {
+                    template: "#producerList",
+                    props: ['chainState', 'filterProducers'],
+                    data: function () {
+                        var self = this;
+                        console.log('filterProducers', this.filterProducers);
+                        return {
+                            filterProducers: [],
+                            currentPage: 1,
+                            totalPage: 10,
+                            pageSize: 70,
+                            countryCode: countryCode,
+                            loading: true,
+                            producers: [],
+                            tableData: [],
+                            request: true,
+                            multipleSelection: [],
+                            t: 0
+                        }
+                    },
+                    watch: {
+                        currentPage: function (newVal, oldVal) {
+                            this.loading = true;
+                            this.getProducers();
+                        }
+                    },
+                    mounted: function () {
+                        setInterval(function () {
+                            self.getProducers(true);
+                        }, 80 * 1000);
+    
+                        var self = this;
+    
+                        if(this.$refs.page){
+                            this.$refs.page.$on("pageChange", function (data) {
+                                self.currentPage = data;
+                                console.log("pageChange", data);
+                            })
+                        }
+    
+                        if(this.filterProducers && this.filterProducers.length){
+                            self.pageSize = 400;
+                        }
+                        
+                        this.getProducers();
+                    },
+                    methods: {
+                        visuliazeProducers: function(){
+                            if(!this.multipleSelection.length){
+                                alert("please select one producer");
+                                return;
+                            }
+                            this.$router.push( { name: 'VoterStruct', params: { producers: this.multipleSelection.join(',') }})
+                        },
+                        handleSelectionChange: function (val) {
+                            console.log('handleSelectionChange', val);
+                            var selectedProducers = [];
+                            for(var key in val){
+                                selectedProducers.push(val[key].owner)
+                            }
+                            this.multipleSelection = selectedProducers;
+                        },
+                        clickProducer: function(row, index){
+                            Vue.set(row, "selected", !row.selected);
+                            var val = [];
+                            for(var key in this.tableData){
+                                if(this.tableData[key].selected) val.push(this.tableData[key]);
+                            }
+                            this.handleSelectionChange(val);
+                            console.log('clickProducer', row, val);
+                        },
+                        getProducers: function (isTimer) {
+                            var self = this;
+                            if(isTimer && self.request){
+                                return;
+                            }
+                            this.request = true;
+                            this.API.get("getProducers"+ "?p=" + this.currentPage + "&size=" + this.pageSize).then(function (res) {
+                                if(res.data.rows){
+                                    self.producers = res.data.rows;
+                                    self.totalPage = Math.ceil(res.data.total / self.pageSize);
+                                }else{
+                                    self.producers = res.data;
+                                }
+                                
+                                self.loading = false;
+                                self.request = false;
+                                
+                                var tableData = [];
+                                var indexCount = 0;
+    
+                                for(var key in self.producers){
+                                    indexCount++;
+                                    var producer = self.producers[key];
+                                    var show = true;
+                                    if(self.filterProducers && self.filterProducers.indexOf(producer.owner) == -1){
+                                        show = false;
+                                    }
+    
+                                    producer.show = show;
+                                    producer.voters =  producer.voters ?  producer.voters : 0;
+    
+                                    producer.tags = [];
+    
+                                    if(producerTags[producer.owner]){
+                                        producer.tags = [].concat(producerTags[producer.owner]);
+                                    }
+                                    
+                                    if(producer.org_location &&  producer.org_location.country){
+                                        producer.tags.push(producer.org_location.country);
+                                    }
+                                    // console.log('producerTags[key]', producerTags[producer.owner]);
+                                    if(show){
+                                        tableData.push(producer);
+                                    }
+                                }
+                                
+                                self.tableData = tableData;
+                                // filterProducers && filterProducers.indexOf(voter.account_name) > -1
+                                var r = 0;
+                                for (var i in self.producers)
+                                200 * (o = self.producers[i].total_votes / self.chainState.total_producer_vote_weight * 100) < 100 && (
+                                    r += parseFloat(self.producers[i].total_votes)
+                                );
+                                self.t = r;
+                            })
+                        },
+                        cacluteReawrd: function(i, producer, chainState, r){
+                            var o, u = 0; 
+                            parseInt(i) + 1 < 22 && (u += 318),
+                            u += producer.total_votes / (chainState.total_producer_vote_weight - r) * 100 * 200;
+                            var flag = 200 * (o = producer.total_votes / chainState.total_producer_vote_weight * 100) < 100;
+                            if(u < 100){
+                                u = 0;
+                            }
+                            return u.toFixed(0);
+                        },
+                        calculateVoteWeight: function() {
+                            var timestamp_epoch = 946684800000;
+                            var dates_ = (Date.now() / 1000) - (timestamp_epoch / 1000);
+                            var weight_ = Math.ceil(dates_ / (86400 * 7)) / 52;
+                            return Math.pow(2, weight_);
+                        },
+                        numberWithCommas: function(x) {
+                            x = x.toString();
+                            var pattern = /(-?\d+)(\d{3})/;
+                            while (pattern.test(x))
+                            x = x.replace(pattern, "$1,$2");
+                            return x;
+                        }
+                    }
+                }
+    
+                var ProxyList = {
+                    template:"#ProxyList",
+                    data: function () {
+                        return {
+                            currentPage: 1,
+                            totalPage: 10,
+                            pageSize: 70,
+                            loading: true,
+                            voters: []
+                        }
+                    },
+                    mounted: function () {
+                        var self = this;
+                        this.$refs.page.$on("pageChange", function (data) {
+                            self.currentPage = data;
+                            console.log("pageChange", data);
+                        })
+                        this.getProxyVoters();
+                    },
+                    watch: {
+                        currentPage: function (newVal, oldVal) {
+                            this.loading = true;
+                            this.getProxyVoters();
+                        }
+                    },
+                    methods: {
+                        getProxyVoters: function () {
+                            var self = this;
+                            var params = this.$route.params;
+                            console.log(this.$router);
+                            this.API.get("getVoteProxy?p=" + this.currentPage + "&size=" + this.pageSize).then(function (res) {
+                                self.voters = res.data.rows;
+                                self.loading = false;
+                                self.totalPage = Math.ceil(res.data.total / self.pageSize);
+                                console.log(res.data, self.totalPage, res.data.total / self.pageSize);
+                            })
+                        },
+                        numberWithCommas: function(x) {
+                            x = x.toString();
+                            var pattern = /(-?\d+)(\d{3})/;
+                            while (pattern.test(x))
+                            x = x.replace(pattern, "$1,$2");
+                            return x;
+                        }
+                    }
+                };
+                
+    
+               function numberWithCommas(x) {
+                    x = x.toString();
+                    var pattern = /(-?\d+)(\d{3})/;
+                    while (pattern.test(x))
+                    x = x.replace(pattern, "$1,$2");
+                    return x;
+                }
+        
+                var ProducerDetail = {
+                    template: "#producerDetail",
+                    props: ["chainState"],
+                    data: function () {
+                        return {
+                            currentPage: 1,
+                            totalPage: 10,
+                            pageSize: 20,
+                            loading: true,
+                            producer: {
+                            },
+                            removeChart: {},
+                            chainState: {}
+                        }
+                    },
+                    mounted: function () {
+                        var self = this;
+                        this.$refs.page.$on("pageChange", function (data) {
+                            self.currentPage = data;
+                            console.log("pageChange", data);
+                        })
+                        this.getProducers();
+                    },
+                    watch: {
+                        currentPage: function (newVal, oldVal) {
+                            this.loading = true;
+                            this.getProducers();
+                        },
+                        $route: function (to, from) {
+                            this.loading = true;
+                            this.getProducers();
+                        }
+                    },
+                    methods: {
+                        getProducers: function () {
+                            var self = this;
+                            var params = this.$route.params;
+                            console.log(this.$router);
+                            this.API.get("getProducer/" + params.producer + "?p=" + this.currentPage + "&size=" + this.pageSize).then(function (res) {
+                                self.producer = res.data;
+                                self.totalPage = Math.ceil(res.data.producer.voters / self.pageSize);
+                                self.loading = false;
+                                try{
+                                    self.calcutePieData();
+                                }catch(e){
+    
+                                }
+                                console.log(res.data);
+                            })
+                        },
+    
+                        calcutePieData: function(){
+    
+                            var removeChart = {
+                                name: "Remove voters",
+                                total: 0,
+                                data: []
+                            };
+    
+                            var addChart = {
+                                name: "New voters",
+                                total: 0,
+                                data: []
+                            };
+    
+                            var removeMap = {};
+                            var addMap = {};
+    
+                            this.producer.removeLogs.forEach(function(row, index){
+                                var value =  row.info.voter_info.staked / 10000;
+                                
+    
+                                if(index == 0){
+                                    removeChart.first =  moment.utc(row.timestamp).utcOffset(moment().utcOffset()); 
+                                }
+    
+                                removeChart.last =  moment.utc(row.timestamp).utcOffset(moment().utcOffset()); 
+                                if(!removeMap[row.voter]){
+                                    removeChart.total += value;
+                                    removeChart.data.push({ name: row.voter, value: value }) 
+                                }
+                                removeMap[row.voter] = 1; 
+                            })
+    
+                       
+                            this.producer.addLogs.forEach(function(row, index){
+                                var value =  row.info.voter_info.staked / 10000;
+                                if(index == 0){
+                                    addChart.first =  moment.utc(row.timestamp).utcOffset(moment().utcOffset()); 
+                                }
+    
+                                addChart.last =  moment.utc(row.timestamp).utcOffset(moment().utcOffset()); 
+                                if(!addMap[row.voter]){
+                                    addChart.data.push({ name: row.voter, value: value });
+                                    addChart.total += value;
+                                }
+                                addMap[row.voter] = 1; 
+                            })
+    
+                            removeChart.subname = "Total: "+numberWithCommas(removeChart.total.toFixed(0))+" EOS   Date Range: "+removeChart.first.format('YYYY-MM-DD') +" / "+removeChart.last.format('YYYY-MM-DD');
+                            addChart.subname = "Total: "+numberWithCommas(addChart.total.toFixed(0))+" EOS   Date Range: "+addChart.first.format('YYYY-MM-DD') +" / "+addChart.last.format('YYYY-MM-DD');
+    
+                            this.removeChart = removeChart;
+                            this.addChart = addChart;
+    
+                        },
+                        calculateVoteWeight: function() {
+                            var timestamp_epoch = 946684800000;
+                            var dates_ = (Date.now() / 1000) - (timestamp_epoch / 1000);
+                            var weight_ = Math.ceil(dates_ / (86400 * 7)) / 52;
+                            return Math.pow(2, weight_);
+                        },
+                        numberWithCommas: function(x) {
+                            x = x.toString();
+                            var pattern = /(-?\d+)(\d{3})/;
+                            while (pattern.test(x))
+                            x = x.replace(pattern, "$1,$2");
+                            return x;
+                        }
+                    }
+                }
+        
+        
+                var VoterList = {
+                    template:"#VoterList",
+                    data: function () {
+                        return {
+                            currentPage: 1,
+                            totalPage: 10,
+                            pageSize: 20,
+                            loading: true,
+                            voters: []
+                        }
+                    },
+                    mounted: function () {
+                        var self = this;
+                        this.$refs.page.$on("pageChange", function (data) {
+                            self.currentPage = data;
+                            console.log("pageChange", data);
+                        })
+                        this.getProducers();
+                    },
+                    watch: {
+                        currentPage: function (newVal, oldVal) {
+                            this.loading = true;
+                            this.getProducers();
+                        }
+                    },
+                    methods: {
+                        getProducers: function () {
+                            var self = this;
+                            var params = this.$route.params;
+                            console.log(this.$router);
+                            this.API.get("getVoters?p=" + this.currentPage + "&size=" + this.pageSize).then(function (res) {
+                                self.voters = res.data.rows;
+                                self.loading = false;
+                                self.totalPage = Math.ceil(res.data.total / self.pageSize);
+                                console.log(res.data);
+                            })
+                        },
+                        numberWithCommas: function(x) {
+                            x = x.toString();
+                            var pattern = /(-?\d+)(\d{3})/;
+                            while (pattern.test(x))
+                            x = x.replace(pattern, "$1,$2");
+                            return x;
+                        }
+                    }
+                }
+        
+                var VoterDetail = {
+                    template: "#VoterDetail",
+                    props: ['chainState'],
+                    components: {
+                      'producers-list'  : ProducersList
+                    },
+                    data: function () {
+                        this.getVoter();
+                        return {
+                            chainState: chainState,
+                            loading: true,
+                            voter: {},
+                            eosClient: null,
+                            charts: [],
+                            querying: {
+    
+                            }
+                        }
+                    },
+    
+                    watch: {
+                        voter: function (newVal, oldVal) {
+                        },
+                        $route: function (to, from) {
+                            this.getVoter();
+                        }
+                    },
+    
+                    mounted: function () {
+                        this.eosClient = Eos({
+                            chainId: "aca376f206b8fc25a6ed44dbdc66547c36c6c33e3a119ffbeaef943642f0e906", 
+                            httpEndpoint: 'https://api.eosmedi.com/',
+                        });
+                    },
+        
+                    methods: {
+                        viewBlock: function(block, voteAction, index){
+                            var self = this;
+                            if(self.querying[block]){
+                                return;
+                            }
+    
+                            self.querying[block] = true;
+                            this.eosClient.getBlock(block).then(function(block){
+                                self.querying[block] = false;
+                                voteAction.timestamp = block.timestamp;
+                                self.$set(self.voter.actions, index, voteAction);
+                                console.log(block, voteAction);
+                            })
+                            console.log('viewBlock', block);
+                        },
+    
+                        getVoter: function () {
+                            var self = this;
+                            var params = this.$route.params;
+                            console.log(this.$router);
+                            this.API.get("getVoter/" + params.voter).then(function (res) {
+                                self.voter = res.data;
+                                self.voter.actions = self.voter.actions || [];
+                                self.voter.actions = self.voter.actions.reverse();
+                                self.loading = false;
+                                var chartData =  self.voter.all_proxy_voters.map(function(v){ 
+                                    return { 
+                                        name: v.voter, 
+                                        value: v.staked/10000 
+                                    }
+                                });
+    
+                               self.charts.push({
+                                        chartName: self.voter.account_name + " Graph",
+                                        chartData: chartData
+                                });
+    
+                                console.log(res.data);
+                            })
+                        },
+    
+                        numberWithCommas: function(x) {
+                            x = x.toString();
+                            var pattern = /(-?\d+)(\d{3})/;
+                            while (pattern.test(x))
+                            x = x.replace(pattern, "$1,$2");
+                            return x;
+                        }
+                    }
+                }
+                
+    
+                
+    
+                var VoterStruct = {
+                    template: '#VoterStruct',
+                    components: {
+                      'producers-list'  : ProducersList
+                    },
+                    data: function () {
+                        console.log("VoterStruct");
+                        this.getProducerData();
+                        return {
+                            chainState: chainState,
+                            data: [],
+                            loading: true,
+                            charts: []
+                        }
+                    },
+                    mounted: function () {
+                      
+                        // this.chartData = diskData;
+                      
+                    },
+                    watch: {
+                        voter: function (newVal, oldVal) {
+                        },
+                        $route: function (to, from) {
+                            this.getVoter();
+                        }
+                    },
+        
+                    methods: {
+                        getProducerData: function () {
+                            var self = this;
+                            var params = this.$route.params;
+                            console.log(this.$router);
+                            this.API.get("voterCompare?producers="+params.producers).then(function (res) {
+                                self.data = res.data;
+                                self.loading = false;
+                                self.data.forEach(function(data){
+                                    var chartData =  data.voters.map(function(v){ 
+                                        return { 
+                                            name: v.account_name, 
+                                            value: v.staked/10000 
+                                        }
+                                    });
+    
+                                    self.charts.push({
+                                        chartName: data.producer.owner,
+                                        chartData: chartData
+                                    });
+    
+                                })
+                                console.log(self.charts);
+                            })
+                        }
+                    }
+                }
+    
+    
+                var SubmitProxyInfo = {
+                    template: '#SubmitProxyInfo',
+                    props: ['eosClient', 'identity'],
+                    data: function () {
+                        console.log("SubmitProxyInfo");
+                        return {
+                            centerDialogVisible: false,
+                            dialogTitle: "",
+                            dialogMessage: "",
+                            form: {
+                            }
+                        }
+                    },
+                    mounted: function () {
+                      
+                        // this.chartData = diskData;
+                        
+                      
+                    },
+                    watch: {
+                        voter: function (newVal, oldVal) {
+                        },
+                        eosClient: function (to, from) {
+    
+                           console.log("ready")
+                        },
+                        $route: function (to, from) {
+                            this.getVoter();
+                        }
+                    },
+        
+                    methods: {
+                        onSubmit() {
+                            var self = this;
+    
+                            if(!this.eosClient){
+                                this.$message({
+                                    message: 'Please attach an account',
+                                    type: 'warning'
+                                });
+                                return;
+                            }
+                            
+                            this.dialogTitle = "Info";
+    
+                            this.centerDialogVisible = true;
+                            var identity = this.identity;
+                            console.log(identity);
+                            var firstAccount = identity.accounts[0];
+                            if(firstAccount){
+    
+                            }
+                            
+    
+                            this.dialogMessage = "Scatter will pop up a window let u accept Signature request...";
+                            
+                            var defData = {
+                                "proxy": firstAccount.name,
+                                "name": "",
+                                "slogan": "",
+                                "philosophy": "",
+                                "background": "",
+                                "website": "",
+                                "logo_256": "",
+                                "telegram": "",
+                                "steemit": "",
+                                "twitter": "",
+                                "wechat": ""
+                            };
+    
+                            for(var k in this.form){
+                                defData[k] = this.form[k];
+                            }
+    
+                            this.eosClient.transaction({
+                                actions: [
+                                    {
+                                        account: 'regproxyinfo',
+                                        name: 'set',
+                                        authorization: [{
+                                            actor: firstAccount.name,
+                                            permission: firstAccount.authority
+                                        }],
+                                        data: defData
+                                    }
+                                ]
+                            }).then(function(data){
+                                console.log(data.transaction_id);
+                                self.dialogMessage = "proxy info submit sucessed.<br>  TX:"+data.transaction_id;
+                            }, function(error){
+                                self.dialogMessage = "proxy info submit failed.<br> <span style='color:red'> "+error.message+"</span>";
+                                console.log("error", error)
+                            }).catch(function(error){
+                                error = JSON.parse(error);
+                                self.dialogMessage = "proxy info submit failed. <br> <span style='color:red'>"+error.error.details[0].message.split(":")[1]+"</span>";
+                                console.log("submmit error", error);
+                            })
+                        }
+                    }
+                }
+        
+                var routes = [
+                    { 
+                        name: "ProducersList",
+                        path: '/', component: ProducersList },
+                    {
+                        name: "ProducerDetail",
+                        path: '/producer/:producer', component: ProducerDetail
+                    },
+                    {
+                        name: "VoterList",
+                        path: '/voters', component: VoterList
+                    },
+                    {
+                        name: "ProxyList",
+                        path: '/proxies', component: ProxyList
+                    },
+                    {
+                        name: "VoterDetail",
+                        path: '/voter/:voter', component: VoterDetail
+                    },
+                    {
+                        name: "VoterStruct",
+                        path: '/voterStruct/:producers', component: VoterStruct
+                    },
+                    {
+                        name: "SubmitProxyInfo",
+                        path: '/submit-proxy-info', component: SubmitProxyInfo,
+                        meta: { requireEosClient: true }
+                    }
+                ]
+        
+                var router = new VueRouter({
+                    routes: routes
+                })
+    
+                
+                router.afterEach(function(from, to){
+                    console.log(from, to)
+                    if(window.scrollTo){
+                        window.scrollTo( 0, 0 ); 
+                    }
+                })
+    
+    
+                var network = {
+                    blockchain: 'eos',
+                    host: 'mainnet.genereos.io', // ( or null if endorsed chainId )
+                    port: 443, // ( or null if defaulting to 80 )
+                    chainId: "aca376f206b8fc25a6ed44dbdc66547c36c6c33e3a119ffbeaef943642f0e906", // Or null to fetch automatically ( takes longer )
+                }
+        
+                var app = new Vue({
+                    router: router,
+                    data: function () {
+                        var self = this;
+                        self.getStatus();
+                        setInterval(function () {
+                            self.getStatus(true);
+                        }, 30 * 1000);
+        
+                        self.getVoteLogs();
+                        setInterval(function () {
+                            self.getVoteLogs(true);
+                        }, 30 * 1000);
+        
+                        return {
+    
+                            status: {
+                                producers: 376,
+                                voters: 17515,
+                                proxy_voters: 81,
+                                percent_stacked: 30.383
+                            },
+                            countryCode: countryCode,
+                            requestStatus: true,
+                            requestLogs: true,
+                            chainState: {},
+                            logFilters: {},
+                            voteLogs: [],
+                            scatter: null,
+                            identity: null,
+                            eosClient: null
+                        }
+                    },
+                    mounted: function () {
+                        this.initliazeRoute();
+                        var self = this;
+                        if ('-ms-scroll-limit' in document.documentElement.style && '-ms-ime-align' in document.documentElement.style) { // detect it's IE11
+                            window.addEventListener("hashchange", function(event) {
+                                var currentPath = window.location.hash.slice(1);
+                                if (self.$route.path !== currentPath) {
+                                    self.$router.push(currentPath)
+                                }
+                            }, false)
+                        }
+    
+                        document.addEventListener('scatterLoaded', function(){
+                            console.log('scatterLoaded', window.scatter.identity)
+                            self.scatter = window.scatter;
+                            self.identity = window.scatter.identity;
+                        })
+    
+                        console.log(this.$route)
+                    },
+    
+                    watch: {
+                        $route: function (to, from) {
+    
+                            console.log("$route", this.$route);
+                            this.initliazeRoute();
+                        },
+                        identity: function(){
+                            var self = this;
+                            try{
+                                if(self.identity){
+                                    self.identity.accounts.forEach(function(x){
+                                        if(x.blockchain == "eos"){
+                                            self.identity.name = x.name+"@"+x.authority;
+                                        }
+                                    })
+                                    self.eosClient = window.scatter.eos(network, Eos, {
+                                        broadcast: true,
+                                        sign: true,
+                                        chainId: "aca376f206b8fc25a6ed44dbdc66547c36c6c33e3a119ffbeaef943642f0e906",
+                                    },'https');
+                                }
+                            }catch(e){
+                                console.log(e);
+                            }
+    
+                        }
+                    },
+    
+                    methods: {
+    
+                        connectScatter: function(){
+                            var self = this;
+                            console.log("connectScatter");
+                            this.scatter.getIdentity({ 
+                                accounts:[
+                                    { 
+                                        chainId: network.chainId, 
+                                        blockchain: network.blockchain
+                                    }
+                                ]
+                            }).then(function(){
+                                console.log('Attach Identity');
+                                console.log(self.scatter.identity);
+                                self.identity = window.scatter.identity;
+                                // this.setState({identity: window.scatter.identity});
+                            }).catch(function(error){
+                                console.error(error);
+                            });
+                        },
+    
+                        signOut: function(){
+                            var self = this;
+                            console.log("connectScatter");
+                            this.scatter.forgetIdentity().then(function() {
+                                console.log('Detach Identity');
+                                self.identity = window.scatter.identity;
+                            }).catch(function(error){
+                                console.error(error);
+                            });
+                        },
+    
+                        initliazeRoute: function(){
+                            var route = this.$route;
+                            this.logFilters = {};
+                            if(route.name == "ProducerDetail"){
+                                this.logFilters.producer = route.params.producer;
+                            }
+    
+                            if(route.name == "VoterDetail"){
+                                this.logFilters.voter = route.params.voter;
+                            }
+                            console.log(this.logFilters, route);
+                        },
+    
+                        filterLog: function(voteLog){
+                            voteLog.timeFormatted = moment.utc(voteLog.timestamp).utcOffset(moment().utcOffset()).format("llll");
+                            if(this.logFilters.producer){
+                                return voteLog.producers.indexOf(this.logFilters.producer) > -1
+                            }
+                            if(this.logFilters.voter){
+                                return voteLog.voter == this.logFilters.voter
+                            }
+                           
+    
+                            return true;
+                        },
+    
+                        getStatus: function (isTimer) {
+                            var self = this;
+                            var params = this.$route.params;
+    
+                            if(isTimer && self.requestStatus){
+                                return;
+                            }
+    
+                            this.requestStatus = true;
+                            this.API.get("getStatus").then(function (res) {
+                                self.status = res.data;
+                                self.requestStatus = false;
+                                self.chainState = self.status.chain_state;
+                                self.chainState.total_producer_vote_weight = parseInt(self.chainState.total_producer_vote_weight);
+                            })
+                        },
+    
+                        getVoteLogs: function (isTimer) {
+                            var self = this;
+                            if(isTimer && self.requestLogs){
+                                return;
+                            }
+    
+                            this.requestLogs = true;
+                            this.API.get("getVoteLogs").then(function (res) {
+                                self.requestLogs = false;
+                                self.voteLogs = res.data.reverse();
+                            })
+                        },
+                    }
+                }).$mount('#app')
+        
+            </script>
+    
+    
+    <footer class="bd-footer text-muted">
+            <div class="container-fluid p-3 p-md-5 py-md-3">
+              <ul class="bd-footer-links">
+                <li><a href="https://t.me/eosmedi">Telegram</a></li>
+                <li><a href="https://github.com/eosmedi/EOS-Voter-Tracker">Github</a></li>
+                <li>| <span style="padding-left:10px"> Other tools</span></li>
+                <li><a href="http://eosflare.io/" target="_blank">eosflare</a></li>
+                <li><a href="http://eosnetworkmonitor.io/" target="_blank">EOS Network Monitor</a></li>
+                <li><a href="https://validate.eosnation.io/producers/" target="_blank">EOS Validator</a></li>
+                 <li><a href="https://www.myeoskit.com/" target="_blank">MyEOSKit</a></li>
+                
+    
+                
+              </ul>
+              <p>© 2018 EOS Mediterranean</p>
+            </div>
+    </footer>
+    
+     <!-- Global site tag (gtag.js) - Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-119761410-1"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'UA-119761410-1');
+    </script>
+    </body>
+    </html>
+    
